@@ -13,7 +13,10 @@ function parseData(data: string) {
 
 export function normaliseResponse(rawBody: string, raw = false): TranslationResult {
   const data = parseData(rawBody);
-  const translatedPhrases = data[1][0][0][5];
+  const translatedPhrases = data[1]?.[0]?.[0]?.[5];
+  if (!Array.isArray(translatedPhrases)) {
+    throw new Error("Unexpected response structure");
+  }
   const text = translatedPhrases.reduce<string>((fullText, [textBlock]) => {
     return fullText ? `${fullText} ${textBlock}` : textBlock;
   }, "");
